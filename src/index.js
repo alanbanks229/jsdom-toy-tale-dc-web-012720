@@ -3,6 +3,8 @@ let addToy = false;
 document.addEventListener("DOMContentLoaded", () => {
   const addBtn = document.querySelector("#new-toy-btn");
   const toyForm = document.querySelector(".container");
+  const createBtn = document.querySelector('.add-toy-form');
+  createBtn.addEventListener('submit', createNewToy)
   addBtn.addEventListener("click", () => {
     // hide & seek with the form
     addToy = !addToy;
@@ -42,6 +44,27 @@ function appendToys(object){
   card.append(h2, img, p_likes, likeBtn)
   container.append(card)
 
+
+}
+
+function createNewToy(e){
+  e.preventDefault();
+  let name = document.querySelector('.input-text').value;
+  let image = document.querySelector('.input-url').value;
+  // let newObj = {}
+  // newObj['name'] = name
+  // newObj['image'] = image
+  let data = {
+    "name": name, "image": image, "likes": "0"
+  }
+  fetch('http://localhost:3000/toys', {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(res => res.json())
+  .then(data => appendToys(data))
 }
 
 function increaseLikes(event, p_likes){
